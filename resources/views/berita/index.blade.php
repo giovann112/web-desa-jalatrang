@@ -66,7 +66,6 @@
     <!-- Navbar -->
     <div class="navbar">
         <div class="logo">
-            <!-- Jika ada logo gambar, taruh tag img di sini -->
             <div>
                 <div style="font-size: 16px;">PEMERINTAH DESA JALATRANG</div>
                 <div style="font-size: 12px; font-weight: normal; color: #cbd5e1;">KECAMATAN CIPAKU KABUPATEN CIAMIS</div>
@@ -99,7 +98,6 @@
                 ▼ Filter Berita
             </div>
            <div class="sidebar-body">
-                <!-- Tambahkan form method GET untuk pencarian -->
                 <form action="{{ url('/') }}" method="GET">
                     <div class="form-group">
                         <label>Kata Kunci</label>
@@ -111,21 +109,22 @@
                             <option value="Semua Kategori" {{ request('kategori') == 'Semua Kategori' ? 'selected' : '' }}>Semua Kategori</option>
                             <option value="Olahraga" {{ request('kategori') == 'Olahraga' ? 'selected' : '' }}>Olahraga</option>
                             <option value="Pendidikan" {{ request('kategori') == 'Pendidikan' ? 'selected' : '' }}>Pendidikan</option>
+                            <!-- BAGIAN YANG DITAMBAHKAN -->
+                            <option value="gotong royong" {{ request('kategori') == 'gotong royong' ? 'selected' : '' }}>Gotong Royong</option>
                         </select>
                     </div>
                     <button type="submit" class="btn-cari">Cari</button>
-                    <!-- Tombol reset mengembalikan ke halaman awal tanpa filter -->
                     <a href="{{ url('/') }}" style="display:block; text-align:center; text-decoration:none; box-sizing:border-box;" class="btn-reset">Reset</a>
                 </form>
             </div>
-        </div> <!-- INI TAMBAHANNYA AGAR LAYOUT TIDAK RUSAK -->
+        </div>
 
-        <!-- Berita Grid (Diambil dari Database) -->
+        <!-- Berita Grid -->
         <div class="content">
             @foreach($berita as $item)
             <div class="card">
                 <div class="card-img">
-                    [Gambar Berita]
+                   <img src="{{ asset('images/' . $item->gambar) }}" alt="{{ $item->judul }}" style="width: 100%; height: 200px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;">
                 </div>
                 <div class="card-body">
                     <div class="meta-info">
@@ -133,7 +132,9 @@
                         <span class="date">📅 {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</span>
                     </div>
                     <h3 class="card-title">{{ $item->judul }}</h3>
-                    <p class="card-text">{{ $item->ringkasan }}</p>
+                    
+                    <p class="card-text" style="text-align: justify;">{{ Str::limit(strip_tags($item->isi ?? $item->ringkasan), 120) }}</p>
+                    
                     <div class="tags">{{ $item->tags }}</div>
                     <div class="card-footer">
                         <span class="views">👁 {{ $item->views }}</span>
